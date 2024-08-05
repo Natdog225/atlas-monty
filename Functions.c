@@ -131,6 +131,19 @@ void add(stack_t **stack, unsigned int line_number)
 }
 
 /**
+ * nop - Doesn't do anything.
+ * @stack: Double pointer to the top of the stack (unused).
+ * @line_number: Line number of the instruction (unused).
+ */
+void nop(stack_t **stack, unsigned int line_number)
+{
+	(void)stack;	   /*Suppress unused parameter warning*/
+	(void)line_number; /*Suppress unused parameter warning */
+
+	; /* effectively does nothing */
+}
+
+/**
  * is_digit - Checks if a string is a valid digit.
  * @str: The string to check.
  * Return: 1 if the string is a digit, 0 otherwise.
