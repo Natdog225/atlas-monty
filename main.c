@@ -1,5 +1,11 @@
 #include "monty.h"
 
+/**
+ * main - Entry point of the Monty interpreter.
+ * @argc: Number of command-line arguments.
+ * @argv: Array of command-line arguments.
+ * Return: EXIT_SUCCESS on success, EXIT_FAILURE on error.
+ */
 int main(int argc, char *argv[])
 {
 	if (argc != 2)
@@ -15,7 +21,7 @@ int main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 
-	stack_t *stack = NULL; /* Initialize an empty stack */
+	stack_t *stack = NULL;
 	char line[1024];
 	unsigned int line_number = 0;
 	instruction_t instructions[] = {
@@ -26,18 +32,15 @@ int main(int argc, char *argv[])
 	while (fgets(line, sizeof(line), file) != NULL)
 	{
 		line_number++;
-		char *opcode = strtok(line, " \t\n"); /* Get the opcode */
-		if (opcode && opcode[0] != '#')		  /* Skip comments */
+		char *opcode = strtok(line, " \t\n");
+		if (opcode && opcode[0] != '#')
 		{
 			int i = 0;
 			while (instructions[i].opcode && strcmp(opcode, instructions[i].opcode) != 0)
-			{
 				i++;
-			}
+
 			if (instructions[i].opcode)
-			{
 				instructions[i].f(&stack, line_number);
-			}
 			else
 			{
 				fprintf(stderr, "L%u: unknown instruction %s\n", line_number, opcode);
@@ -50,5 +53,5 @@ int main(int argc, char *argv[])
 
 	free_stack(stack);
 	fclose(file);
-	return (0);
+	return (EXIT_SUCCESS);
 }
