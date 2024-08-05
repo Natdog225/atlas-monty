@@ -67,3 +67,20 @@ int is_digit(char *str)
 	}
 	return (1);
 }
+/**
+ * free_stack - Frees a stack_t list
+ * @head: Pointer to the head of the list
+ *
+ * Return: Nothing
+ */
+void free_stack(stack_t *head)
+{
+	stack_t *temp;
+
+	while (head != NULL)
+	{
+		temp = head;
+		head = head->next;
+		free(temp);
+	}
+}
