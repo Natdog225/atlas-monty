@@ -102,13 +102,34 @@ void swap(stack_t **stack, unsigned int line_number)
 	{
 		fprintf(stderr, "L%u: can't swap, stack too short\n", line_number);
 		exit(EXIT_FAILURE);
-		
 	}
 
 	int temp = (*stack)->n;			 /*Store top value*/
 	(*stack)->n = (*stack)->next->n; /* Move second to top */
 	(*stack)->next->n = temp;		 /*Put original top in second place*/
 }
+/**
+ * add - Adds the top two elements of the stack.
+ * @stack: Double pointer to the top of the stack.
+ * @line_number: Line number of the instruction.
+ */
+void add(stack_t **stack, unsigned int line_number)
+
+{
+	if (*stack == NULL || (*stack)->next == NULL)
+	{
+		fprintf(stderr, "L%u: can't add, stack too short\n", line_number);
+		exit(EXIT_FAILURE);
+	}
+
+	stack_t
+		*temp = *stack;
+	(*stack)->next->n += (*stack)->n;
+	*stack = (*stack)->next;
+	(*stack)->prev = NULL;
+	free(temp);
+}
+
 /**
  * is_digit - Checks if a string is a valid digit.
  * @str: The string to check.
