@@ -43,5 +43,6 @@ void pall(stack_t **stack, unsigned int line_number);
 	void
 	free_stack(stack_t *stack);
 int main(int argc, char *argv[]);
+int is_digit(char *str);
 
 #endif
