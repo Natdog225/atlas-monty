@@ -65,6 +65,51 @@ void pint(stack_t **stack, unsigned int line_number)
 	printf("%d\n", (*stack)->n);
 }
 /**
+ * pop - Removes the top element of the stack.
+ * @stack: Double pointer to the top of the stack.
+ * @line_number: Line number of the instruction.
+ */
+void pop(stack_t **stack, unsigned int line_number)
+
+{
+	if (*stack == NULL)
+	{
+		fprintf(stderr, "L%u: can't pop an empty stack\n", line_number);
+		exit(EXIT_FAILURE);
+	}
+
+	stack_t *temp = *stack;
+	/* Store the top node */
+	*stack = (*stack)->next; /* Update top to the next node */
+
+	if (*stack != NULL)
+	{
+		(*stack)->prev = NULL;
+	}
+
+	free(temp); /* Free the memory of the removed node */
+}
+
+/**
+ * swap - Swaps the top two elements of the stack.
+ * @stack: Double pointer to the top of the stack.
+ * @line_number: Line number of the instruction.
+ */
+void swap(stack_t **stack, unsigned int line_number)
+
+{
+	if (*stack == NULL || (*stack)->next == NULL)
+	{
+		fprintf(stderr, "L%u: can't swap, stack too short\n", line_number);
+		exit(EXIT_FAILURE);
+		
+	}
+
+	int temp = (*stack)->n;			 /*Store top value*/
+	(*stack)->n = (*stack)->next->n; /* Move second to top */
+	(*stack)->next->n = temp;		 /*Put original top in second place*/
+}
+/**
  * is_digit - Checks if a string is a valid digit.
  * @str: The string to check.
  * Return: 1 if the string is a digit, 0 otherwise.
