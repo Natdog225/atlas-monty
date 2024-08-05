@@ -15,6 +15,7 @@ int main(int argc, char *argv[])
 	instruction_t instructions[] = {
 		{"push", push},
 		{"pall", pall},
+		/* ... Add other instructions here ... */
 		{NULL, NULL}};
 
 	if (argc != 2)
@@ -34,11 +35,11 @@ int main(int argc, char *argv[])
 	{
 		line_number++;
 		char *opcode = strtok(line, " \t\n");
+
 		if (opcode && opcode[0] != '#')
 		{
 			int i = 0;
-			while (instructions[i].opcode &&
-				   strcmp(opcode, instructions[i].opcode) != 0)
+			while (instructions[i].opcode && strcmp(opcode, instructions[i].opcode) != 0)
 			{
 				i++;
 			}
@@ -49,8 +50,7 @@ int main(int argc, char *argv[])
 			}
 			else
 			{
-				fprintf(stderr,
-						"L%u: unknown instruction %s\n", line_number, opcode);
+				fprintf(stderr, "L%u: unknown instruction %s\n", line_number, opcode);
 				free_stack(stack);
 				fclose(file);
 				exit(EXIT_FAILURE);
