@@ -1,70 +1,54 @@
 #include "monty.h"
 
-/**
- * push - Pushes an element onto the stack.
- * @stack: Double pointer to the top of the stack.
- * @line_number: Line number of the instruction.
- */
-void push(stack_t **stack, unsigned int line_number)
+int main(int argc, char *argv[])
 {
-    char *arg = strtok(NULL, " \t\n");
+	if (argc != 2)
+	{
+		fprintf(stderr, "USAGE: monty file\n");
+		exit(EXIT_FAILURE);
+	}
 
-    if (arg == NULL || !is_digit(arg))
-    {
-        fprintf(stderr, "L%u: usage: push integer\n", line_number);
-        exit(EXIT_FAILURE);
-    }
+	FILE *file = fopen(argv[1], "r");
+	if (file == NULL)
+	{
+		fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
+		exit(EXIT_FAILURE);
+	}
 
-    int n = atoi(arg);
-    stack_t *new_node = malloc(sizeof(stack_t));
+	stack_t *stack = NULL; /* Initialize an empty stack */
+	char line[1024];
+	unsigned int line_number = 0;
+	instruction_t instructions[] = {
+		{"push", push},
+		{"pall", pall},
+		{NULL, NULL}};
 
-    if (new_node == NULL)
-    {
-        fprintf(stderr, "Error: malloc failed\n");
-        exit(EXIT_FAILURE);
-    }
+	while (fgets(line, sizeof(line), file) != NULL)
+	{
+		line_number++;
+		char *opcode = strtok(line, " \t\n"); /* Get the opcode */
+		if (opcode && opcode[0] != '#')		  /* Skip comments */
+		{
+			int i = 0;
+			while (instructions[i].opcode && strcmp(opcode, instructions[i].opcode) != 0)
+			{
+				i++;
+			}
+			if (instructions[i].opcode)
+			{
+				instructions[i].f(&stack, line_number);
+			}
+			else
+			{
+				fprintf(stderr, "L%u: unknown instruction %s\n", line_number, opcode);
+				free_stack(stack);
+				fclose(file);
+				exit(EXIT_FAILURE);
+			}
+		}
+	}
 
-    new_node->n = n;
-    new_node->prev = NULL;
-    new_node->next = *stack;
-
-    if (*stack != NULL)
-        (*stack)->prev = new_node;
-
-    *stack = new_node;
-}
-
-/**
- * pall - Prints all the values on the stack, starting from the top.
- * @stack: Double pointer to the top of the stack.
- * @line_number: Line number of the instruction (unused here).
- */
-void pall(stack_t **stack, unsigned int line_number __attribute__((unused)))
-{
-    stack_t *current = *stack;
-
-    while (current != NULL)
-    {
-        printf("%d\n", current->n);
-        current = current->next;
-    }
-}
-
-/**
- * is_digit - Checks if a string is a valid digit.
- * @str: The string to check.
- * Return: 1 if the string is a digit, 0 otherwise.
- */
-int is_digit(char *str)
-{
-    if (str[0] == '-' && strlen(str) > 1)
-        str++;
-
-    while (*str)
-    {
-        if (*str < '0' || *str > '9')
-            return (0);
-        str++;
-    }
-    return (1);
+	free_stack(stack);
+	fclose(file);
+	return (0);
 }
