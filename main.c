@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 		if (opcode && opcode[0] != '#')
 		{
 			int i = 0;
-			
+
 			while (instructions[i].opcode && strcmp(opcode, instructions[i].opcode) != 0)
 			{
 				i++;
